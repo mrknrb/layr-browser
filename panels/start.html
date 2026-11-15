@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Start</title>
+    <link rel="stylesheet" href="/_layr/layr.css" />
+    <link rel="stylesheet" href="./start.css" />
+    <script type="module" src="./start.js"></script>
+  </head>
+  <body>
+    <main class="wrap">
+      <form class="go" id="go" autocomplete="off">
+        <svg class="go-icon" viewBox="0 0 24 24" width="18" height="18"><path d="M10 3a7 7 0 0 1 5.6 11.2l5.1 5.1-1.4 1.4-5.1-5.1A7 7 0 1 1 10 3zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10z" fill="currentColor" /></svg>
+        <input class="layr-input go-input" id="url" placeholder="Type an address or search the web" spellcheck="false"
+          aria-label="Address or search" />
+        <button class="layr-button primary" type="submit">Open</button>
+      </form>
+
+      <section>
+        <div class="section-head">
+          <h2>Bookmarks</h2>
+          <span class="layr-spacer"></span>
+          <button class="layr-button small ghost" id="edit" aria-pressed="false">Edit</button>
+          <button class="layr-button small" id="add">Add</button>
+        </div>
+        <form class="layr-card add-form" id="addForm" hidden>
+          <div class="field">
+            <label class="layr-label" for="bmTitle">Name</label>
+            <input class="layr-input" id="bmTitle" placeholder="PubMed" />
+          </div>
+          <div class="field grow">
+            <label class="layr-label" for="bmUrl">Address</label>
+            <input class="layr-input" id="bmUrl" placeholder="https://pubmed.ncbi.nlm.nih.gov" spellcheck="false" />
+          </div>
+          <div class="add-actions">
+            <button class="layr-button ghost" type="button" id="cancelAdd">Cancel</button>
+            <button class="layr-button primary" type="submit" id="saveAdd">Save</button>
+          </div>
+        </form>
+        <div class="tiles" id="tiles"></div>
+      </section>
+
+      <section id="recentSection" hidden>
+        <div class="section-head">
+          <h2>Recent</h2>
+          <span class="layr-spacer"></span>
+          <button class="layr-button small ghost" id="clearRecent">Clear</button>
+        </div>
+        <ul class="layr-list recent" id="recent"></ul>
+      </section>
+    </main>
+  </body>
+</html>

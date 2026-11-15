@@ -1,0 +1,194 @@
+body {
+  overflow-y: auto;
+}
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 48px 20px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.go {
+  position: relative;
+  display: flex;
+  gap: 8px;
+}
+.go-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--fg-dim);
+  pointer-events: none;
+}
+.go-input {
+  height: 40px;
+  padding-left: 38px;
+  font-size: 15px;
+  border-radius: calc(var(--radius) + 4px);
+  background: var(--bg-2);
+}
+.go .layr-button {
+  height: 40px;
+  padding: 0 18px;
+  border-radius: calc(var(--radius) + 4px);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.section-head h2 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.add-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.add-form[hidden] {
+  display: none;
+}
+.add-form .field {
+  flex: 1 1 160px;
+}
+.add-form .field.grow {
+  flex: 3 1 240px;
+}
+.add-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 10px;
+}
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 4px);
+  background: var(--bg-2);
+  color: var(--fg);
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.12s, border-color 0.12s, transform 0.12s;
+}
+.tile:hover {
+  background: var(--bg-3);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+  text-decoration: none;
+}
+.tile:active {
+  transform: scale(0.98);
+}
+.tile-icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--tile-color, var(--accent));
+  color: #fff;
+  font-weight: 700;
+  font-size: 17px;
+  overflow: hidden;
+}
+.tile-icon img {
+  position: absolute;
+  inset: 6px;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+.tile-icon.has-img {
+  background: #fff;
+}
+.tile-name {
+  width: 100%;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tile-host {
+  width: 100%;
+  margin-top: -6px;
+  color: var(--fg-dim);
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tile-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: none;
+}
+.editing .tile-remove {
+  display: inline-flex;
+}
+.editing .tile {
+  cursor: default;
+  animation: wiggle 0.35s ease-in-out infinite alternate;
+}
+@keyframes wiggle {
+  from {
+    transform: rotate(-0.6deg);
+  }
+  to {
+    transform: rotate(0.6deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .editing .tile {
+    animation: none;
+  }
+}
+.tiles .layr-empty {
+  grid-column: 1 / -1;
+  border: 1px dashed var(--border);
+  border-radius: calc(var(--radius) + 4px);
+}
+
+.recent > li {
+  cursor: pointer;
+  gap: 10px;
+}
+.recent .r-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.recent .r-host {
+  color: var(--fg-dim);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.recent .r-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--tile-color, var(--accent));
+}

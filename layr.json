@@ -1,0 +1,23 @@
+{
+  "id": "browser",
+  "name": "Browser",
+  "version": "0.1.0",
+  "description": "Web pages in tabs, with a start page for your bookmarks.",
+  "author": "layr",
+  "layr": "^0.1",
+  "icon": "public",
+  "permissions": ["data"],
+  "panels": [
+    { "id": "start", "title": "Start", "page": "panels/start.html", "icon": "travel_explore" },
+    { "id": "page", "title": "Web page", "external": true, "icon": "public" }
+  ],
+  "commands": [
+    { "id": "open", "title": "Browser: Open web page…", "panel": "start", "params": { "transient": true } },
+    { "id": "bookmarks", "title": "Browser: Bookmarks", "panel": "start", "params": { "edit": true } }
+  ],
+  "menus": [
+    { "menu": "File", "command": "open", "group": "2" },
+    { "menu": "View", "command": "bookmarks" }
+  ],
+  "keybindings": [{ "key": "ctrl+l", "command": "open" }]
+}
