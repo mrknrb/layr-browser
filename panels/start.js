@@ -113,13 +113,11 @@ function renderTiles() {
   els.tiles.innerHTML = bookmarks
     .map((b) => {
       const host = hostOf(b.url);
-      let icon = "";
-      try {
-        icon = new URL("/favicon.ico", b.url).href;
-      } catch {}
+      // A letter, not the site's favicon: the page's CSP loads no images from outside (it would tell sites what
+      // the user bookmarked, and any image address can carry data out).
+      const letter = (b.title || host).charAt(0).toUpperCase();
       return `<a class="tile" href="${esc(b.url)}" data-key="${esc(b.key)}" title="${esc(b.url)}">
-        <span class="tile-icon" style="--tile-color:${colorFor(host)}">${esc((b.title || host).charAt(0).toUpperCase())}
-          ${icon ? `<img src="${esc(icon)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span>
+        <span class="tile-icon" style="--tile-color:${colorFor(host)}">${esc(letter)}</span>
         <span class="tile-name">${esc(b.title || host)}</span>
         <span class="tile-host">${esc(host)}</span>
         <button class="layr-button small icon danger tile-remove" data-remove="${esc(b.key)}" title="Remove"
@@ -127,11 +125,6 @@ function renderTiles() {
       </a>`;
     })
     .join("");
-  // Show the site's icon only when it loads; the letter stays otherwise.
-  for (const img of els.tiles.querySelectorAll(".tile-icon img")) {
-    img.addEventListener("load", () => img.naturalWidth > 1 && img.parentElement.classList.add("has-img"));
-    img.addEventListener("error", () => img.remove());
-  }
 }
 
 function renderRecent() {

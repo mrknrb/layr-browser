@@ -1,7 +1,7 @@
 {
   "id": "browser",
   "name": "Browser",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Web pages in tabs, with a start page for your bookmarks.",
   "author": "layr",
   "layr": "^0.1",
