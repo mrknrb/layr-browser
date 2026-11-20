@@ -1,6 +1,8 @@
 // Browser start page: an address field and bookmarks. Web pages open as the plugin's external "page" panel.
-// Data (layr.data): "bookmark:<id>" → {title, url, addedAt}; "recent" → [{title, url, at}] (newest first, max 12);
-// "seeded" → true once the first bookmarks were added.
+// Data (layr.data): "bookmark:<id>" → {title, url, addedAt}; "seeded" → true once the first bookmarks were added.
+// Recent pages come from the history the shell keeps (collection "history": {url, title, at}); the old "recent" list
+// ([{title, url, at}]) only until there is one. With params.private it is a private tab's start page: what it opens
+// is private too, and it shows no recent pages.
 import "/_layr/layr.js";
 const layr = window.layr;
 
@@ -25,7 +27,16 @@ const STARTERS = [
   { title: "DuckDuckGo", url: "https://duckduckgo.com" },
 ];
 const MAX_RECENT = 12;
-const SEARCH = "https://duckduckgo.com/?q=";
+const SEARCHES = {
+  duckduckgo: "https://duckduckgo.com/?q=",
+  google: "https://www.google.com/search?q=",
+  bing: "https://www.bing.com/search?q=",
+  brave: "https://search.brave.com/search?q=",
+  startpage: "https://www.startpage.com/do/search?q=",
+  ecosia: "https://www.ecosia.org/search?q=",
+};
+let SEARCH = SEARCHES.duckduckgo;
+const isPrivate = () => !!(layr.info && layr.info.params && layr.info.params.private);
 
 let bookmarks = []; // [{key, title, url, addedAt}]
 let recent = [];
@@ -61,19 +72,13 @@ function colorFor(host) {
 
 // ---------- opening ----------
 
-async function openUrl(url, title) {
+async function openUrl(url) {
   try {
-    await layr.panels.open("page", { url });
+    await layr.panels.open("page", isPrivate() ? { url, private: true } : { url });
   } catch (err) {
     layr.ui.notify(`Couldn't open the page: ${err.message}`, "error");
     return;
   }
-  recent = [{ title: title || hostOf(url), url, at: Date.now() }, ...recent.filter((r) => r.url !== url)].slice(
-    0,
-    MAX_RECENT
-  );
-  renderRecent();
-  layr.data.set("recent", recent).catch(() => {});
   // Opened by "Open web page…": this start tab was only a way there, so it goes away.
   if (layr.info.params && layr.info.params.transient) layr.panel.close().catch(() => {});
 }
@@ -156,7 +161,7 @@ function wire() {
     e.preventDefault();
     const url = toUrl(els.url.value);
     if (url) {
-      openUrl(url, /^https?:/i.test(els.url.value.trim()) ? undefined : els.url.value.trim());
+      openUrl(url);
       els.url.value = "";
     }
   });
@@ -172,21 +177,16 @@ function wire() {
     const tile = e.target.closest(".tile");
     if (!tile) return;
     const b = bookmarks.find((x) => x.key === tile.dataset.key);
-    if (b) openUrl(b.url, b.title);
+    if (b) openUrl(b.url);
   });
 
   els.recent.addEventListener("click", (e) => {
     const li = e.target.closest("li[data-url]");
     if (!li) return;
-    const r = recent.find((x) => x.url === li.dataset.url);
-    openUrl(li.dataset.url, r?.title);
+    openUrl(li.dataset.url);
   });
 
-  $("clearRecent").onclick = () => {
-    recent = [];
-    renderRecent();
-    layr.data.delete("recent").catch(() => {});
-  };
+  $("allHistory").onclick = () => layr.panels.open("history", { tab: "history" }).catch(() => {});
 
   els.edit.onclick = () => {
     editing = !editing;
@@ -225,8 +225,26 @@ function wire() {
     }
   });
 
-  // Another start tab changed the bookmarks.
+  // Another start tab, or the address bar's star, changed the bookmarks.
   layr.events.on("browser:bookmarks", () => loadBookmarks().then(renderTiles));
+  layr.settings.onChange(({ values }) => {
+    SEARCH = SEARCHES[values && values.searchEngine] || SEARCHES.duckduckgo;
+  });
+}
+
+/** The newest distinct pages of the history (the old "recent" list until there is a history). */
+async function loadRecent() {
+  const rows = await layr.db.list("history", { limit: 100 });
+  const seen = new Set();
+  const out = [];
+  for (const r of rows) {
+    const v = r.value || {};
+    if (typeof v.url !== "string" || seen.has(v.url)) continue;
+    seen.add(v.url);
+    out.push({ title: v.title, url: v.url, at: v.at });
+    if (out.length >= MAX_RECENT) break;
+  }
+  return out.length ? out : (await layr.data.get("recent")) || [];
 }
 
 async function main() {
@@ -247,7 +265,9 @@ async function main() {
       await layr.data.set("seeded", true);
     }
     await loadBookmarks();
-    recent = (await layr.data.get("recent")) || [];
+    recent = isPrivate() ? [] : await loadRecent();
+    const engine = await layr.settings.get("searchEngine").catch(() => null);
+    SEARCH = SEARCHES[engine] || SEARCHES.duckduckgo;
   } catch (err) {
     layr.ui.notify(`Couldn't load bookmarks: ${err.message}`, "error");
   }
@@ -255,6 +275,11 @@ async function main() {
   renderRecent();
 
   const params = layr.info.params || {};
+  if (params.private) {
+    document.body.classList.add("private");
+    document.title = "Private tab";
+    layr.panel.setTitle("Private tab").catch(() => {});
+  }
   if (params.edit) {
     editing = false;
     els.edit.click();

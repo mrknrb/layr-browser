@@ -1,0 +1,105 @@
+body {
+  overflow-y: auto;
+}
+.tabs {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  gap: 2px;
+  padding: 8px 20px 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.tabs button {
+  padding: 8px 14px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--fg-dim);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.tabs button[aria-selected="true"] {
+  color: var(--fg);
+  border-bottom-color: var(--accent);
+}
+.wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 16px 20px 40px;
+}
+.wrap h2 {
+  margin: 22px 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+.layr-toolbar {
+  margin-bottom: 8px;
+}
+.layr-toolbar .layr-input {
+  max-width: 360px;
+}
+.layr-list > li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.layr-list .time {
+  flex: none;
+  width: 64px;
+  white-space: nowrap;
+  color: var(--fg-dim);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.layr-list .title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.layr-list .host {
+  flex: none;
+  max-width: 40%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--fg-dim);
+  font-size: 12px;
+}
+.more {
+  margin: 14px auto 0;
+  display: block;
+}
+.more[hidden] {
+  display: none;
+}
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 14px;
+}
+.settings .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 34px;
+  font-size: 13px;
+}
+.settings .row.end {
+  justify-content: flex-end;
+  padding: 6px 0;
+}
+.settings .layr-select {
+  width: auto;
+  min-width: 180px;
+}

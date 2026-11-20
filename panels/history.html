@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>History</title>
+    <link rel="stylesheet" href="/_layr/layr.css" />
+    <link rel="stylesheet" href="./history.css" />
+    <script type="module" src="./history.js"></script>
+  </head>
+  <body>
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="history" aria-selected="true">History</button>
+      <button role="tab" data-tab="downloads">Downloads</button>
+      <button role="tab" data-tab="closed">Recently closed</button>
+      <button role="tab" data-tab="settings">Settings</button>
+    </nav>
+
+    <main class="wrap">
+      <section data-pane="history">
+        <div class="layr-toolbar">
+          <input class="layr-input" id="search" placeholder="Search the history" spellcheck="false" />
+          <span class="layr-spacer"></span>
+          <button class="layr-button small danger" id="clearHistory">Clear history…</button>
+        </div>
+        <div id="historyList"></div>
+        <button class="layr-button small more" id="more" hidden>Show older</button>
+      </section>
+
+      <section data-pane="downloads" hidden>
+        <div class="layr-toolbar">
+          <span class="layr-muted">Open a download from the download button in a web page's address bar.</span>
+          <span class="layr-spacer"></span>
+          <button class="layr-button small ghost" id="clearDownloads">Clear the list</button>
+        </div>
+        <ul class="layr-list" id="downloadsList"></ul>
+      </section>
+
+      <section data-pane="closed" hidden>
+        <ul class="layr-list" id="closedList"></ul>
+      </section>
+
+      <section data-pane="settings" hidden>
+        <div class="layr-card settings">
+          <label class="row">
+            <span>Search engine</span>
+            <select class="layr-select" id="searchEngine">
+              <option value="duckduckgo">DuckDuckGo</option>
+              <option value="google">Google</option>
+              <option value="bing">Bing</option>
+              <option value="brave">Brave Search</option>
+              <option value="startpage">Startpage</option>
+              <option value="ecosia">Ecosia</option>
+            </select>
+          </label>
+          <label class="row"><span>Keep a history</span><input type="checkbox" id="keepHistory" /></label>
+          <label class="row"><span>Offer to save passwords</span><input type="checkbox" id="savePasswords" /></label>
+          <label class="row"><span>Fill in forms (addresses, names)</span><input type="checkbox" id="fillForms" /></label>
+        </div>
+
+        <h2>Site permissions</h2>
+        <ul class="layr-list" id="permList"></ul>
+
+        <h2>Zoom per site</h2>
+        <ul class="layr-list" id="zoomList"></ul>
+
+        <h2>Clear browsing data</h2>
+        <div class="layr-card settings">
+          <label class="row"><span>Browsing history (layr's)</span><input type="checkbox" data-clear="history" checked /></label>
+          <label class="row"><span>Cookies and site data (you are signed out of sites)</span><input type="checkbox" data-kind="128" /></label>
+          <label class="row"><span>Cached images and files</span><input type="checkbox" data-kind="256" checked /></label>
+          <label class="row"><span>Saved passwords</span><input type="checkbox" data-kind="2048" /></label>
+          <label class="row"><span>Form autofill data</span><input type="checkbox" data-kind="1024" /></label>
+          <div class="row end"><button class="layr-button danger" id="clearData">Clear…</button></div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
