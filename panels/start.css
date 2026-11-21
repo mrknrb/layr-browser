@@ -182,3 +182,27 @@ body {
   border-radius: 50%;
   background: var(--tile-color, var(--accent));
 }
+
+/* A private tab's start page. */
+.private-note {
+  display: none;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: calc(var(--radius) + 4px);
+  background: color-mix(in srgb, #8e6bd6 18%, var(--bg-2));
+  border: 1px solid color-mix(in srgb, #8e6bd6 50%, transparent);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.private-note svg {
+  flex: none;
+  color: #8e6bd6;
+  margin-top: 1px;
+}
+body.private .private-note {
+  display: flex;
+}
+body.private .go-input:focus {
+  border-color: #8e6bd6;
+}
