@@ -1,7 +1,8 @@
 // Browser › History: the history the shell keeps for outside pages, downloads, recently closed tabs and the browser's
 // settings (docs/ARCHITECTURE.md › Web panels › The browser). What the shell writes into this plugin's data:
 // collection "history" {url, title, at}; "downloads" [{url, path, total, at}]; "closed" [{url, title}];
-// "zoom:<host>" → factor; "perm:<origin>|<kind>" → true (allowed) | false (blocked). After changing them here it tells
+// "zoom:<host>" → factor; "perm:<origin>|<kind>" → true (allowed) | false (blocked); "desktop:<site>" → true (a
+// phone shows the site's desktop site). After changing them here it tells
 // the shell with browser:history, browser:downloads, browser:permissions; Clear browsing data is browser:clear {kinds}
 // (a WebView2 COREWEBVIEW2_BROWSING_DATA_KINDS mask), which the shell runs in the web view profile.
 import "/_layr/layr.js";
@@ -141,6 +142,16 @@ async function loadSettings() {
         )
         .join("")
     : `<div class="layr-empty">Every site at 100%. Ctrl+wheel or Ctrl+plus zooms a site, and it keeps it.</div>`;
+
+  const desktops = await layr.data.list({ prefix: "desktop:", limit: 1000 });
+  $("desktopList").innerHTML = desktops.length
+    ? desktops
+        .map(
+          (r) => `<li><span class="title">${esc(r.key.slice(8))}</span>
+            <button class="layr-button small icon ghost" data-undesktop="${esc(r.key)}" title="Back to its phone site" aria-label="Forget">×</button></li>`
+        )
+        .join("")
+    : `<div class="layr-empty">No site yet. On a phone, the page menu's Desktop site shows a site as on a computer, and it keeps it.</div>`;
 }
 
 async function clearData() {
@@ -229,6 +240,13 @@ function wire() {
     const b = e.target.closest("[data-unzoom]");
     if (!b) return;
     await layr.data.delete(b.dataset.unzoom);
+    layr.events.emit("browser:permissions", {}).catch(() => {});
+    loadSettings();
+  });
+  $("desktopList").addEventListener("click", async (e) => {
+    const b = e.target.closest("[data-undesktop]");
+    if (!b) return;
+    await layr.data.delete(b.dataset.undesktop);
     layr.events.emit("browser:permissions", {}).catch(() => {});
     loadSettings();
   });
