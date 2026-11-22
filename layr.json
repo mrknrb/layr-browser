@@ -1,7 +1,7 @@
 {
   "id": "browser",
   "name": "Browser",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Web pages in tabs: a start page for your bookmarks, private tabs, history, downloads and site settings.",
   "author": "layr",
   "layr": "^0.1",
